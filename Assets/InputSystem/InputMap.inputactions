@@ -15,7 +15,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Look",
+                    "name": "Rotate",
                     "type": "PassThrough",
                     "id": "7d8225f7-a846-4faa-b46f-eb4f2af81c9b",
                     "expectedControlType": "Vector2",
@@ -24,7 +24,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Fire",
+                    "name": "PickUp",
                     "type": "Button",
                     "id": "a33a4937-6722-4f79-925b-819232116ac1",
                     "expectedControlType": "Button",
@@ -140,7 +140,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse;Touch",
-                    "action": "Look",
+                    "action": "Rotate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -151,7 +151,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Fire",
+                    "action": "PickUp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

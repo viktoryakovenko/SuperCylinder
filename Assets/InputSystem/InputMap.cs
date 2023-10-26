@@ -37,7 +37,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Look"",
+                    ""name"": ""Rotate"",
                     ""type"": ""PassThrough"",
                     ""id"": ""7d8225f7-a846-4faa-b46f-eb4f2af81c9b"",
                     ""expectedControlType"": ""Vector2"",
@@ -46,7 +46,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Fire"",
+                    ""name"": ""PickUp"",
                     ""type"": ""Button"",
                     ""id"": ""a33a4937-6722-4f79-925b-819232116ac1"",
                     ""expectedControlType"": ""Button"",
@@ -162,7 +162,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse;Touch"",
-                    ""action"": ""Look"",
+                    ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -173,7 +173,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Fire"",
+                    ""action"": ""PickUp"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -246,8 +246,8 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         // Gameplay
         m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
         m_Gameplay_Movement = m_Gameplay.FindAction("Movement", throwIfNotFound: true);
-        m_Gameplay_Look = m_Gameplay.FindAction("Look", throwIfNotFound: true);
-        m_Gameplay_Fire = m_Gameplay.FindAction("Fire", throwIfNotFound: true);
+        m_Gameplay_Rotate = m_Gameplay.FindAction("Rotate", throwIfNotFound: true);
+        m_Gameplay_PickUp = m_Gameplay.FindAction("PickUp", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -310,15 +310,15 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Gameplay;
     private List<IGameplayActions> m_GameplayActionsCallbackInterfaces = new List<IGameplayActions>();
     private readonly InputAction m_Gameplay_Movement;
-    private readonly InputAction m_Gameplay_Look;
-    private readonly InputAction m_Gameplay_Fire;
+    private readonly InputAction m_Gameplay_Rotate;
+    private readonly InputAction m_Gameplay_PickUp;
     public struct GameplayActions
     {
         private @InputMap m_Wrapper;
         public GameplayActions(@InputMap wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_Gameplay_Movement;
-        public InputAction @Look => m_Wrapper.m_Gameplay_Look;
-        public InputAction @Fire => m_Wrapper.m_Gameplay_Fire;
+        public InputAction @Rotate => m_Wrapper.m_Gameplay_Rotate;
+        public InputAction @PickUp => m_Wrapper.m_Gameplay_PickUp;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -331,12 +331,12 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
             @Movement.started += instance.OnMovement;
             @Movement.performed += instance.OnMovement;
             @Movement.canceled += instance.OnMovement;
-            @Look.started += instance.OnLook;
-            @Look.performed += instance.OnLook;
-            @Look.canceled += instance.OnLook;
-            @Fire.started += instance.OnFire;
-            @Fire.performed += instance.OnFire;
-            @Fire.canceled += instance.OnFire;
+            @Rotate.started += instance.OnRotate;
+            @Rotate.performed += instance.OnRotate;
+            @Rotate.canceled += instance.OnRotate;
+            @PickUp.started += instance.OnPickUp;
+            @PickUp.performed += instance.OnPickUp;
+            @PickUp.canceled += instance.OnPickUp;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -344,12 +344,12 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
             @Movement.started -= instance.OnMovement;
             @Movement.performed -= instance.OnMovement;
             @Movement.canceled -= instance.OnMovement;
-            @Look.started -= instance.OnLook;
-            @Look.performed -= instance.OnLook;
-            @Look.canceled -= instance.OnLook;
-            @Fire.started -= instance.OnFire;
-            @Fire.performed -= instance.OnFire;
-            @Fire.canceled -= instance.OnFire;
+            @Rotate.started -= instance.OnRotate;
+            @Rotate.performed -= instance.OnRotate;
+            @Rotate.canceled -= instance.OnRotate;
+            @PickUp.started -= instance.OnPickUp;
+            @PickUp.performed -= instance.OnPickUp;
+            @PickUp.canceled -= instance.OnPickUp;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -415,7 +415,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
     public interface IGameplayActions
     {
         void OnMovement(InputAction.CallbackContext context);
-        void OnLook(InputAction.CallbackContext context);
-        void OnFire(InputAction.CallbackContext context);
+        void OnRotate(InputAction.CallbackContext context);
+        void OnPickUp(InputAction.CallbackContext context);
     }
 }

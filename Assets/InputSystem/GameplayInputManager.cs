@@ -5,6 +5,7 @@ public class GameplayInputManager: MonoBehaviour
 {
     public event Action<Vector2> OnRotationInputReceived;
     public event Action<Vector2> OnMovementInputReceived;
+    public event Action<bool> OnPickupInputReceived;
 
     private InputMap _gameInput;
     private KeyboardAndMouseInput _input;
@@ -29,9 +30,9 @@ public class GameplayInputManager: MonoBehaviour
         _gameInput.Gameplay.Disable();
     }
 
-    private void FixedUpdate() 
+    private void FixedUpdate()
     {
-        ReceiveKeyboardInput();
+        ReceiveMovementInput();
     }
 
     private void InitKeyboardAndMouseInput(InputMap inputMap)
@@ -39,6 +40,7 @@ public class GameplayInputManager: MonoBehaviour
         _input = new KeyboardAndMouseInput(inputMap);
         
         _input.OnRotationInputReceived += ReceiveRotationInput;
+        _input.OnPickupInputReceived += ReceivePickupInput;
     }
 
     private void ReceiveRotationInput(Vector2 delta)
@@ -46,9 +48,14 @@ public class GameplayInputManager: MonoBehaviour
         OnRotationInputReceived?.Invoke(delta);
     }
 
-    private void ReceiveKeyboardInput()
+    private void ReceiveMovementInput()
     {
         var delta = _gameInput.Gameplay.Movement.ReadValue<Vector2>();
         OnMovementInputReceived?.Invoke(delta);
+    }
+
+    private void ReceivePickupInput(bool click)
+    {
+        OnPickupInputReceived?.Invoke(click);
     }
 }
