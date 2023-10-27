@@ -6,8 +6,14 @@ namespace SuperCylinder
     {
         public void PickUp()
         {
-            Debug.Log("sphere");
+            Debug.Log("Sphere picked up");
             gameObject.GetComponent<MeshRenderer>().material.color = Color.green;
+        }
+
+        public void Drop()
+        {
+            Debug.Log("Sphere dropped");
+            gameObject.GetComponent<MeshRenderer>().material.color = Color.white;
         }
     }
 }

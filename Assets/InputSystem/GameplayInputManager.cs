@@ -5,7 +5,7 @@ public class GameplayInputManager: MonoBehaviour
 {
     public event Action<Vector2> OnRotationInputReceived;
     public event Action<Vector2> OnMovementInputReceived;
-    public event Action<bool> OnPickupInputReceived;
+    public event Action OnPickupInputReceived;
 
     private InputMap _gameInput;
     private KeyboardAndMouseInput _input;
@@ -54,8 +54,8 @@ public class GameplayInputManager: MonoBehaviour
         OnMovementInputReceived?.Invoke(delta);
     }
 
-    private void ReceivePickupInput(bool click)
+    private void ReceivePickupInput()
     {
-        OnPickupInputReceived?.Invoke(click);
+        OnPickupInputReceived?.Invoke();
     }
 }

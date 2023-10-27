@@ -8,7 +8,6 @@ public class CameraRotationHandler : MonoBehaviour
     [SerializeField] private Transform _rotationTarget;
     [SerializeField] private float _minVerticalAngle = -30f;
     [SerializeField] private float _maxVerticalAngle = 30f;
-    [SerializeField] private float _raycastDistance = 1;
 
 
     private float _horizontal;
@@ -17,13 +16,11 @@ public class CameraRotationHandler : MonoBehaviour
     private void Start()
     {
         _inputManager.OnRotationInputReceived += Rotate;
-        _inputManager.OnPickupInputReceived += OnPerformRaycast;
     }
 
     private void OnDestroy()
     {
         _inputManager.OnRotationInputReceived -= Rotate;
-        _inputManager.OnPickupInputReceived += OnPerformRaycast;
     }
 
     private void Rotate(Vector2 delta)
@@ -39,19 +36,5 @@ public class CameraRotationHandler : MonoBehaviour
         _rotationTarget.eulerAngles = new Vector3(_vertical, _horizontal, 0f);
     }
 
-    private void OnPerformRaycast(bool clicked)
-    {
-        var direction = _rotationTarget.forward;
-        var ray = new Ray(_rotationTarget.position, direction);
-
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, _raycastDistance))
-        {
-            var hitCollider = hitInfo.collider;
-
-            if (hitCollider.TryGetComponent(out IPickable pickable))
-            {
-                pickable.PickUp();
-            }
-        }
-    }
+    
 }

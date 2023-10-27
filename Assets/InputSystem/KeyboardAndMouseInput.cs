@@ -4,7 +4,7 @@ using UnityEngine;
 public class KeyboardAndMouseInput
 {
     public event Action<Vector2> OnRotationInputReceived;
-    public event Action<bool> OnPickupInputReceived;
+    public event Action OnPickupInputReceived;
 
     public KeyboardAndMouseInput(InputMap inputMap)
     {
@@ -16,11 +16,8 @@ public class KeyboardAndMouseInput
         };
 
         inputMap.Gameplay.PickUp.started += context =>
-        {
-            var leftButtonClick = context.ReadValueAsButton();
-            
-            Debug.Log(leftButtonClick);
-            OnPickupInputReceived?.Invoke(leftButtonClick);
+        {            
+            OnPickupInputReceived?.Invoke();
         };
     }
 }

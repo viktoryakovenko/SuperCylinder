@@ -5,29 +5,30 @@ namespace SuperCylinder
 {
     public class Cube : MonoBehaviour, IUpgradable<Sphere>, IPickable
     {
-        public IReadOnlyList<Sphere> BodyKits => _balls;
+        public IReadOnlyList<Sphere> BodyKits => _spheres;
 
-        private List<Sphere> _balls;
-
-        public Cube(List<Sphere> balls)
-        {
-            _balls = balls;
-        }
+        private List<Sphere> _spheres;
 
         public void AddKit(Sphere kit)
         {
-            _balls.Add(kit);
+            _spheres.Add(kit);
         }
 
         public void RemoveKit(Sphere kit)
         {
-            _balls.Remove(kit);
+            _spheres.Remove(kit);
         }
 
         public void PickUp()
         {
-            Debug.Log("destroying");
+            Debug.Log("Cube picked up");
             gameObject.GetComponent<MeshRenderer>().material.color = Color.blue;
+        }
+
+        public void Drop()
+        {
+            Debug.Log("Cube dropped");
+            gameObject.GetComponent<MeshRenderer>().material.color = Color.white;
         }
     }
 }
