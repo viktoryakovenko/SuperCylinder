@@ -3,10 +3,16 @@ using UnityEngine;
 
 namespace SuperCylinder
 {
+    [RequireComponent(typeof(Rigidbody))]
     public class Cylinder : MonoBehaviour, IUpgradable<Cube>
     {
         public IReadOnlyList<Cube> BodyKits => _cubes;
         private List<Cube> _cubes;
+
+        private void Awake() 
+        {
+            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionY;
+        }
 
         public void AddKit(Cube cube)
         {

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-public interface IUpgradable<T> where T: IPickable
+public interface IUpgradable<T> where T: PickableObject
 {
     IReadOnlyList<T> BodyKits { get; }
 

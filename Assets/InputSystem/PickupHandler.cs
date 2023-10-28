@@ -1,5 +1,3 @@
-using System;
-using Mono.Reflection;
 using UnityEngine;
 
 public class PickupHandler : MonoBehaviour
@@ -7,30 +5,28 @@ public class PickupHandler : MonoBehaviour
     [SerializeField] private float _raycastDistance = 2;
     [SerializeField] private GameplayInputManager _inputManager;
     
-    private Canvas _messageCanvas;
-    private IPickable _pickableObject;
+    private PickableObject _pickableObject;
     private Collider _hitCollider;
 
     private void Awake()
     {
         var prefab = Resources.Load("PickupMessage") as GameObject;
-        var messageCanvas = prefab.GetComponent<Canvas>();
-        _messageCanvas = Instantiate(messageCanvas, transform);
-        _messageCanvas.worldCamera = Camera.main;
+        var canvas = prefab.GetComponent<Canvas>();
+        canvas.worldCamera = Camera.main;
+        canvas = Instantiate(canvas, transform);
 
-        HideMessage();
+        PickupMessage.Init(canvas);
+        PickupMessage.Hide();
     }
 
     private void OnEnable()
     {
         _inputManager.OnPickupInputReceived += PerformPickup;
-        
     }
 
     private void OnDisable()
     {
         _inputManager.OnPickupInputReceived -= PerformPickup;
-        
     }
 
     private void FixedUpdate() 
@@ -47,10 +43,9 @@ public class PickupHandler : MonoBehaviour
             return;
         }
         
-        if (_hitCollider != null && _hitCollider.TryGetComponent(out IPickable pickableObject))
+        if (_hitCollider != null && _hitCollider.TryGetComponent(out _pickableObject))
         {
-            _pickableObject = pickableObject;
-            _pickableObject.PickUp();
+            _pickableObject.PickUp(transform);
         }
     }
 
@@ -62,28 +57,19 @@ public class PickupHandler : MonoBehaviour
         if (Physics.Raycast(position, direction, out RaycastHit hitInfo, _raycastDistance) && _pickableObject == null)
         {
             _hitCollider = hitInfo.collider;
-            if (_hitCollider.TryGetComponent(out IPickable pickable))
-                ShowMessage();
+            if (_hitCollider.TryGetComponent(out PickableObject pickable))
+            {
+                PickupMessage.Show(pickable.gameObject.transform);
+            }
+            else 
+            {
+                PickupMessage.Hide();
+            }
         }
         else
         {
-            _hitCollider = null;
-            HideMessage();
+            _hitCollider = null; 
+            PickupMessage.Hide();
         }
-    }
-
-    private void ShowMessage()
-    {
-        var messagePosition = _hitCollider.gameObject.transform.position;
-        var scaleY = _hitCollider.gameObject.transform.localScale.y;
-        messagePosition.y += scaleY/2f + 0.2f;
-
-        _messageCanvas.gameObject.transform.position = messagePosition;
-        _messageCanvas.gameObject.SetActive(true);
-    }
-
-    private void HideMessage()
-    {
-        _messageCanvas.gameObject.SetActive(false);
     }
 }

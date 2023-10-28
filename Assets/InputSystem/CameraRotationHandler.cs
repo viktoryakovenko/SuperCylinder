@@ -9,9 +9,8 @@ public class CameraRotationHandler : MonoBehaviour
     [SerializeField] private float _minVerticalAngle = -30f;
     [SerializeField] private float _maxVerticalAngle = 30f;
 
-
-    private float _horizontal;
-    private float _vertical;
+    private float _horizontal = 0f;
+    private float _vertical = 0f;
 
     private void Start()
     {
