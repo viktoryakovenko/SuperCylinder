@@ -1,27 +1,36 @@
+using System;
+using Mono.Reflection;
 using UnityEngine;
 
 public class PickupHandler : MonoBehaviour
 {    
     [SerializeField] private float _raycastDistance = 2;
     [SerializeField] private GameplayInputManager _inputManager;
-    [SerializeField] private Canvas _messageCanvas;
-
+    
+    private Canvas _messageCanvas;
     private IPickable _pickableObject;
     private Collider _hitCollider;
 
     private void Awake()
     {
+        var prefab = Resources.Load("PickupMessage") as GameObject;
+        var messageCanvas = prefab.GetComponent<Canvas>();
+        _messageCanvas = Instantiate(messageCanvas, transform);
+        _messageCanvas.worldCamera = Camera.main;
+
         HideMessage();
     }
 
     private void OnEnable()
     {
         _inputManager.OnPickupInputReceived += PerformPickup;
+        
     }
 
     private void OnDisable()
     {
         _inputManager.OnPickupInputReceived -= PerformPickup;
+        
     }
 
     private void FixedUpdate() 
@@ -48,12 +57,13 @@ public class PickupHandler : MonoBehaviour
     private void PerformRaycast()
     {
         var direction = transform.forward;
-        var ray = new Ray(transform.position, direction);
+        var position = transform.position;
 
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, _raycastDistance) && _pickableObject == null)
+        if (Physics.Raycast(position, direction, out RaycastHit hitInfo, _raycastDistance) && _pickableObject == null)
         {
             _hitCollider = hitInfo.collider;
-            ShowMessage();
+            if (_hitCollider.TryGetComponent(out IPickable pickable))
+                ShowMessage();
         }
         else
         {
