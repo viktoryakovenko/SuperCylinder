@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using SuperCylinder;
+using UnityEngine;
 
-public interface IUpgradable<T> where T: PickableObject
+public interface IUpgradable<T> where T : ChildNode
 {
-    IReadOnlyList<T> BodyKits { get; }
+    IReadOnlyDictionary<Transform, T> BodyKits { get; }
 
     void AddKit(T kit);
     void RemoveKit(T kit);

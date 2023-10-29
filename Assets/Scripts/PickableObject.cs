@@ -1,7 +1,5 @@
 using UnityEngine;
 
-
-[RequireComponent(typeof(Rigidbody))]
 public class PickableObject: MonoBehaviour
 {
     public void PickUp(Transform parent)

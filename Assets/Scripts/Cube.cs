@@ -1,21 +1,53 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace SuperCylinder
 {
-    public class Cube : PickableObject, IUpgradable<Sphere>
+    [RequireComponent(typeof(BoxCollider))]
+    [RequireComponent(typeof(Rigidbody))]
+    public class Cube : ChildNode, IUpgradable<Sphere>
     {
-        public IReadOnlyList<Sphere> BodyKits => _spheres;
+        public IReadOnlyDictionary<Transform, Sphere> BodyKits => _spheres;
 
-        private List<Sphere> _spheres;
+        private Dictionary<Transform, Sphere> _spheres;
 
-        public void AddKit(Sphere kit)
+        private void OnCollisionEnter(Collision other) 
         {
-            _spheres.Add(kit);
+            if (other.collider.GetComponent<Cylinder>()) 
+            {
+                Parent = other.collider;
+            }
         }
 
-        public void RemoveKit(Sphere kit)
+        public void Init(List<Sphere> spheres)
         {
-            _spheres.Remove(kit);
+            _spheres = new Dictionary<Transform, Sphere>();
+
+            foreach (var sphere in spheres)
+            {
+                AddKit(sphere);
+            }
+        }
+
+        public void HideKits()
+        {
+            foreach (var sphere in _spheres)
+            {
+                sphere.Value.gameObject.SetActive(false);
+            }
+        }
+
+        public void AddKit(Sphere sphere)
+        {
+            _spheres[sphere.transform] = sphere;
+        }
+
+        public void RemoveKit(Sphere sphere)
+        {
+            if (_spheres.ContainsKey(sphere.transform))
+            {
+                _spheres.Remove(sphere.transform);
+            }
         }
     }
 }
