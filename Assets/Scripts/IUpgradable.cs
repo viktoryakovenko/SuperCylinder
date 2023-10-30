@@ -1,11 +1,10 @@
 using System.Collections.Generic;
-using SuperCylinder;
 using UnityEngine;
 
-public interface IUpgradable<T> where T : ChildNode
+public interface IUpgradable
 {
-    IReadOnlyDictionary<Transform, T> BodyKits { get; }
+    IReadOnlyDictionary<Transform, Collider> BodyKits { get; }
 
-    void AddKit(T kit);
-    void RemoveKit(T kit);
+    void AddKit(Collider kit);
+    void RemoveKit(Collider kit);
 }

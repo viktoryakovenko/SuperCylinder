@@ -1,31 +1,37 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace SuperCylinder
 {
     [RequireComponent(typeof(BoxCollider))]
-    [RequireComponent(typeof(Rigidbody))]
-    public class Cube : ChildNode, IUpgradable<Sphere>
+    public class Cube : ChildNode, IUpgradable
     {
-        public IReadOnlyDictionary<Transform, Sphere> BodyKits => _spheres;
+        public IReadOnlyDictionary<Transform, Collider> BodyKits => _spheres;
 
-        private Dictionary<Transform, Sphere> _spheres;
+        private Dictionary<Transform, Collider> _spheres;
 
-        private void OnCollisionEnter(Collision other) 
+        private void Awake()
         {
-            if (other.collider.GetComponent<Cylinder>()) 
-            {
-                Parent = other.collider;
-            }
-        }
+            _spheres = new Dictionary<Transform, Collider>();
 
-        public void Init(List<Sphere> spheres)
-        {
-            _spheres = new Dictionary<Transform, Sphere>();
+            var boxCollider = GetComponent<BoxCollider>();
 
-            foreach (var sphere in spheres)
+            var center = boxCollider.transform.position;
+            var halfExtents = boxCollider.transform.localScale;
+            var quaternion = boxCollider.transform.localRotation;
+
+            List<Collider> overlapColliders = Physics.OverlapBox(center, halfExtents, quaternion)
+                                                .Where(col => col.GetType() == typeof(SphereCollider)).ToList();
+
+            foreach(var col in overlapColliders)
             {
-                AddKit(sphere);
+                Debug.Log(col);
+                if (col.TryGetComponent(out Sphere sphere))
+                {
+                    sphere.Parent = GetComponent<Collider>();
+                    AddKit(sphere.GetComponent<SphereCollider>());
+                }
             }
         }
 
@@ -37,12 +43,12 @@ namespace SuperCylinder
             }
         }
 
-        public void AddKit(Sphere sphere)
+        public void AddKit(Collider sphere)
         {
             _spheres[sphere.transform] = sphere;
         }
 
-        public void RemoveKit(Sphere sphere)
+        public void RemoveKit(Collider sphere)
         {
             if (_spheres.ContainsKey(sphere.transform))
             {
